@@ -101,7 +101,10 @@ public class PostInvoiceOnFBR extends SvrProcess {
             post.setHeader("Authorization", "Bearer " + bearerToken);
 
             post.setEntity(new StringEntity(invoice.getFBRJsonPayload(cred), StandardCharsets.UTF_8));
-//            System.out.println(invoice.getFBRJsonPayload());           
+            System.out.println(invoice.getFBRJsonPayload(cred)); 
+//            to store invoice payload for testing
+            invoice.set_ValueOfColumn("fbr_payload", invoice.getFBRJsonPayload(cred));
+            invoice.saveEx();            
             try (CloseableHttpResponse response = httpClient.execute(post)) {
                 int statusCode = response.getStatusLine().getStatusCode();
                 String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);

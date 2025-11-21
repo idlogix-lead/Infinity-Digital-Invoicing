@@ -29,5 +29,18 @@ public class MSAPInvoiceLine extends X_SAP_Invoiceline{
 		super(ctx, SAP_Invoiceline_UU, trxName);
 		// TODO Auto-generated constructor stub
 	}
-
+//	@Override
+//	protected boolean afterDelete(boolean success) {
+//		// TODO Auto-generated method stub
+//		if(success)
+//			((MSAPInvoice)this.getSAP_Invoice()).recalculateGrandTotal(get_TrxName());
+//		return super.afterDelete(success);
+//	}
+//	@Override
+//	protected boolean afterSave(boolean newRecord, boolean success) {
+//		// TODO Auto-generated method stub
+//		if(success)
+//			((MSAPInvoice)this.getSAP_Invoice()).recalculateGrandTotal(get_TrxName());
+//		return super.afterSave(newRecord, success);
+//	}
 }

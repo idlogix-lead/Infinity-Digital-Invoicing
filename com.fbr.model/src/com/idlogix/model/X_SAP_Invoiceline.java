@@ -33,7 +33,7 @@ public class X_SAP_Invoiceline extends PO implements I_SAP_Invoiceline, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20250829L;
+	private static final long serialVersionUID = 20250909L;
 
     /** Standard Constructor */
     public X_SAP_Invoiceline (Properties ctx, int SAP_Invoiceline_ID, String trxName)

@@ -6,15 +6,18 @@ import com.idlogix.model.MSAPFBRCredential;
 import com.idlogix.model.MSAPInvoice;
 import com.idlogix.model.MSAPInvoiceLine;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -37,6 +40,7 @@ public class FBR_Api_Call extends SvrProcess {
    Timestamp p_startdate;
    Timestamp p_enddate;
    int org_id;
+   String docNum;
 
    protected void prepare() {
       ProcessInfoParameter[] para = this.getParameter();
@@ -50,6 +54,8 @@ public class FBR_Api_Call extends SvrProcess {
                this.p_enddate = para[i].getParameterAsTimestamp();
             } else if (name.equals("AD_Org_ID")) {
                this.org_id = para[i].getParameterAsInt();
+            } else if (name.equals("DocNum")) {
+                this.docNum = para[i].getParameterAsString();
             } else {
                this.log.log(Level.SEVERE, "Unknown Parameter: " + name);
             }
@@ -188,8 +194,17 @@ public class FBR_Api_Call extends SvrProcess {
                line.setAD_Org_ID(this.org_id);
                line.setsupply_destination("");
                line.saveEx();
+//              saving total in InvoiceHeader
+            // Recalculate total for this invoice
+//               BigDecimal invoiceTotal = DB.getSQLValueBD(
+//                   get_TrxName(),
+//                   "SELECT COALESCE(SUM(total_values), 0) FROM SAP_Invoiceline WHERE sap_invoice_id = ?",
+//                   invoice.get_ID()
+//               );
+//               invoice.setTotalAmt(invoiceTotal);
+//               invoice.saveEx();
             }
-
+            
             return "Invoices processed: " + invoiceMap.size();
          }
       }
@@ -200,9 +215,33 @@ public class FBR_Api_Call extends SvrProcess {
          String url = "https://uactros.myinfinitycrms.com/api/sap-bridge-get";
          String baseUrl = this.cred.getsap_invoice_url();
          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-         String startDateStr = sdf.format(this.p_startdate);
-         String endDateStr = sdf.format(this.p_enddate);
-         String filter = String.format("Invoices/DocEntry eq 27555 and Invoices/DocEntry eq Invoices/DocumentLines/DocEntry and Invoices/DocumentLines/ItemCode eq Items/ItemCode and Invoices/CardCode eq BusinessPartners/CardCode and DocDate ge '%s' and DocDate le '%s' ", startDateStr, endDateStr);
+//         String startDateStr = sdf.format(this.p_startdate);
+//         String endDateStr = sdf.format(this.p_enddate);
+      // Always required filters
+         List<String> conditions = new ArrayList<>();
+         conditions.add("Invoices/DocEntry eq Invoices/DocumentLines/DocEntry");
+         conditions.add("Invoices/DocumentLines/ItemCode eq Items/ItemCode");
+         conditions.add("Invoices/CardCode eq BusinessPartners/CardCode");
+
+         if (docNum != null && !docNum.trim().isEmpty()) {
+             // If DocNum is present → only filter by DocNum
+             conditions.add(String.format("Invoices/DocNum eq '%s'", docNum));
+         } else {
+        	 String startDateStr = sdf.format(this.p_startdate);
+             String endDateStr = sdf.format(this.p_enddate);
+             // If DocNum not present → filter by date range (mandatory)
+             if (startDateStr == null || endDateStr == null || 
+                 startDateStr.trim().isEmpty() || endDateStr.trim().isEmpty()) {
+                 throw new IllegalArgumentException("StartDate and EndDate are required when DocNum is not provided.");
+             }
+
+             conditions.add(String.format("DocDate ge '%s'", startDateStr));
+             conditions.add(String.format("DocDate le '%s'", endDateStr));
+         }
+
+         // Join all conditions with "and"
+         String filter = String.join(" and ", conditions);
+//         String filter = String.format(Invoices/DocEntry eq Invoices/DocumentLines/DocEntry and Invoices/DocumentLines/ItemCode eq Items/ItemCode and Invoices/CardCode eq BusinessPartners/CardCode and DocDate ge '%s' and DocDate le '%s' ", startDateStr, endDateStr);
          String query = "$crossjoin(Invoices,Invoices/DocumentLines,Items,BusinessPartners)?$expand=Invoices($select=DocEntry,DocNum,DocType,DocDate,DocDueDate,CardCode,CardName,DocTotal,Address,Address2,VatPercent),Invoices/DocumentLines($select=ItemCode,ItemDescription,Quantity,Rate,LineTotal,UoMCode,DiscountPercent,U_HS,GrossTotal,LineTotal,TaxTotal,LineNum),Items($select=ItemCode,ItemName,QuantityOrderedByCustomers,U_HSCode,U_Weight,U_CartonUnits),BusinessPartners($select=Address,Block,FederalTaxID,AdditionalID,U_RegType,CardCode)&$filter=" + filter;
          String fullInvoiceUrl = baseUrl + query;
          String payload = String.format("{\n    \"loginUrl\": \"%s\",\n    \"invoiceUrl\": \"%s\",\n    \"loginPayload\": {\n        \"UserName\": \"%s\",\n        \"Password\": \"%s\",\n        \"CompanyDB\": \"%s\"\n    }\n}\n", this.cred.getsap_login_url(), fullInvoiceUrl, this.cred.getsap_username(), this.cred.getsap_password(), this.cred.getsap_company_db());

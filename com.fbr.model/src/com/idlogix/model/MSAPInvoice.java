@@ -16,6 +16,7 @@ import javax.swing.plaf.BorderUIResource.LineBorderUIResource;
 
 import org.compiere.model.Query;
 import org.compiere.util.AdempiereUserError;
+import org.compiere.util.Env;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,7 +63,8 @@ public class MSAPInvoice extends X_SAP_Invoice{
 	    Map<String, Object> payload = new LinkedHashMap<>();
 	    List<Map<String, Object>> items = new ArrayList<>();
 	    
-        payload.put("invoiceType", "Sale Invoice".trim());
+//        payload.put("invoiceType", "Sale Invoice".trim());
+	    payload.put("invoiceType", getinvoice_type().trim());
         Timestamp invoiceDate = getinvoice_date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         payload.put("invoiceDate", sdf.format(invoiceDate).toString());
@@ -151,6 +153,22 @@ public class MSAPInvoice extends X_SAP_Invoice{
 		
 		return jsonPayloadString;
 	}
+	
+//	public void recalculateGrandTotal(String trxName) {
+//	
+//		String filterString = COLUMNNAME_SAP_Invoice_ID +" = "+ get_ID();
+//		List<MSAPInvoiceLine> lines = new Query(p_ctx, MSAPInvoiceLine.Table_Name ,filterString, trxName).list();
+//		BigDecimal grandtotal = Env.ZERO;		//grandtotal = 0;
+//		for(MSAPInvoiceLine line : lines) {
+//			grandtotal = grandtotal.add(line.gettotal_values());
+//			// Grandtotal += line.getamt();
+//			
+//		}
+//		setTotalAmt(grandtotal);
+//		saveEx();
+//		
+//			
+//	}
 	
 	
 

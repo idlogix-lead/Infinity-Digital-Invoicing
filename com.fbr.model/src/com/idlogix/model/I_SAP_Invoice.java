@@ -137,6 +137,19 @@ public interface I_SAP_Invoice
 	/** Get SAP_Invoice_ID	  */
 	public int getSAP_Invoice_ID();
 
+    /** Column name TotalAmt */
+    public static final String COLUMNNAME_TotalAmt = "TotalAmt";
+
+	/** Set Total Amount.
+	  * Total Amount
+	  */
+	public void setTotalAmt (BigDecimal TotalAmt);
+
+	/** Get Total Amount.
+	  * Total Amount
+	  */
+	public BigDecimal getTotalAmt();
+
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 
@@ -183,19 +196,19 @@ public interface I_SAP_Invoice
     /** Column name buyer_province */
     public static final String COLUMNNAME_buyer_province = "buyer_province";
 
-	/** Set buyer_province	  */
+	/** Set Buyer Province	  */
 	public void setbuyer_province (String buyer_province);
 
-	/** Get buyer_province	  */
+	/** Get Buyer Province	  */
 	public String getbuyer_province();
 
     /** Column name buyer_registration_type */
     public static final String COLUMNNAME_buyer_registration_type = "buyer_registration_type";
 
-	/** Set buyer_registration_type	  */
+	/** Set Buyer Registration Type	  */
 	public void setbuyer_registration_type (String buyer_registration_type);
 
-	/** Get buyer_registration_type	  */
+	/** Get Buyer Registration Type	  */
 	public String getbuyer_registration_type();
 
     /** Column name city_code */
@@ -259,10 +272,10 @@ public interface I_SAP_Invoice
     /** Column name invoice_type */
     public static final String COLUMNNAME_invoice_type = "invoice_type";
 
-	/** Set invoice_type	  */
+	/** Set Invoice Type	  */
 	public void setinvoice_type (String invoice_type);
 
-	/** Get invoice_type	  */
+	/** Get Invoice Type	  */
 	public String getinvoice_type();
 
     /** Column name isSAPUpdated */
@@ -277,10 +290,10 @@ public interface I_SAP_Invoice
     /** Column name province_code */
     public static final String COLUMNNAME_province_code = "province_code";
 
-	/** Set province_code	  */
+	/** Set Province Code	  */
 	public void setprovince_code (String province_code);
 
-	/** Get province_code	  */
+	/** Get Province Code	  */
 	public String getprovince_code();
 
     /** Column name scenario_id */

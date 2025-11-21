@@ -17,10 +17,12 @@
 /** Generated Model - DO NOT CHANGE */
 package com.idlogix.model;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
+import org.compiere.util.Env;
 
 /** Generated Model for SAP_Invoice
  *  @author iDempiere (generated)
@@ -32,7 +34,7 @@ public class X_SAP_Invoice extends PO implements I_SAP_Invoice, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20250703L;
+	private static final long serialVersionUID = 20250909L;
 
     /** Standard Constructor */
     public X_SAP_Invoice (Properties ctx, int SAP_Invoice_ID, String trxName)
@@ -193,6 +195,25 @@ public class X_SAP_Invoice extends PO implements I_SAP_Invoice, I_Persistent
 		return ii.intValue();
 	}
 
+	/** Set Total Amount.
+		@param TotalAmt Total Amount
+	*/
+	public void setTotalAmt (BigDecimal TotalAmt)
+	{
+		set_Value (COLUMNNAME_TotalAmt, TotalAmt);
+	}
+
+	/** Get Total Amount.
+		@return Total Amount
+	  */
+	public BigDecimal getTotalAmt()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TotalAmt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set buyer_address.
 		@param buyer_address buyer_address
 	*/
@@ -238,31 +259,51 @@ public class X_SAP_Invoice extends PO implements I_SAP_Invoice, I_Persistent
 		return (String)get_Value(COLUMNNAME_buyer_ntn_cnic);
 	}
 
-	/** Set buyer_province.
-		@param buyer_province buyer_province
+	/** AZAD JAMMU AND KASHMIR = AZAD JAMMU AND KASHMIR */
+	public static final String BUYER_PROVINCE_AZADJAMMUANDKASHMIR = "AZAD JAMMU AND KASHMIR";
+	/** BALOCHISTAN = BALOCHISTAN */
+	public static final String BUYER_PROVINCE_BALOCHISTAN = "BALOCHISTAN";
+	/** CAPITAL TERRITORY = CAPITAL TERRITORY */
+	public static final String BUYER_PROVINCE_CAPITALTERRITORY = "CAPITAL TERRITORY";
+	/** GILGIT BALTISTAN = GILGIT BALTISTAN */
+	public static final String BUYER_PROVINCE_GILGITBALTISTAN = "GILGIT BALTISTAN";
+	/** KHYBER PAKHTUNKHWA = KHYBER PAKHTUNKHWA */
+	public static final String BUYER_PROVINCE_KHYBERPAKHTUNKHWA = "KHYBER PAKHTUNKHWA";
+	/** PUNJAB = PUNJAB */
+	public static final String BUYER_PROVINCE_PUNJAB = "PUNJAB";
+	/** SINDH = SINDH */
+	public static final String BUYER_PROVINCE_SINDH = "SINDH";
+	/** Set Buyer Province.
+		@param buyer_province Buyer Province
 	*/
 	public void setbuyer_province (String buyer_province)
 	{
+
 		set_Value (COLUMNNAME_buyer_province, buyer_province);
 	}
 
-	/** Get buyer_province.
-		@return buyer_province	  */
+	/** Get Buyer Province.
+		@return Buyer Province	  */
 	public String getbuyer_province()
 	{
 		return (String)get_Value(COLUMNNAME_buyer_province);
 	}
 
-	/** Set buyer_registration_type.
-		@param buyer_registration_type buyer_registration_type
+	/** Registered = Registered */
+	public static final String BUYER_REGISTRATION_TYPE_Registered = "Registered";
+	/** Unregistered = Unregistered */
+	public static final String BUYER_REGISTRATION_TYPE_Unregistered = "Unregistered";
+	/** Set Buyer Registration Type.
+		@param buyer_registration_type Buyer Registration Type
 	*/
 	public void setbuyer_registration_type (String buyer_registration_type)
 	{
+
 		set_Value (COLUMNNAME_buyer_registration_type, buyer_registration_type);
 	}
 
-	/** Get buyer_registration_type.
-		@return buyer_registration_type	  */
+	/** Get Buyer Registration Type.
+		@return Buyer Registration Type	  */
 	public String getbuyer_registration_type()
 	{
 		return (String)get_Value(COLUMNNAME_buyer_registration_type);
@@ -359,16 +400,21 @@ public class X_SAP_Invoice extends PO implements I_SAP_Invoice, I_Persistent
 		return (String)get_Value(COLUMNNAME_invoice_ref_no);
 	}
 
-	/** Set invoice_type.
-		@param invoice_type invoice_type
+	/** Debit Note = Debit Note */
+	public static final String INVOICE_TYPE_DebitNote = "Debit Note";
+	/** Sale Invoice = Sale Invoice */
+	public static final String INVOICE_TYPE_SaleInvoice = "Sale Invoice";
+	/** Set Invoice Type.
+		@param invoice_type Invoice Type
 	*/
 	public void setinvoice_type (String invoice_type)
 	{
+
 		set_Value (COLUMNNAME_invoice_type, invoice_type);
 	}
 
-	/** Get invoice_type.
-		@return invoice_type	  */
+	/** Get Invoice Type.
+		@return Invoice Type	  */
 	public String getinvoice_type()
 	{
 		return (String)get_Value(COLUMNNAME_invoice_type);
@@ -396,26 +442,92 @@ public class X_SAP_Invoice extends PO implements I_SAP_Invoice, I_Persistent
 		return false;
 	}
 
-	/** Set province_code.
-		@param province_code province_code
+	/** 2 = 2 */
+	public static final String PROVINCE_CODE_2 = "2";
+	/** 4 = 4 */
+	public static final String PROVINCE_CODE_4 = "4";
+	/** 5 = 5 */
+	public static final String PROVINCE_CODE_5 = "5";
+	/** 6 = 6 */
+	public static final String PROVINCE_CODE_6 = "6";
+	/** 7 = 7 */
+	public static final String PROVINCE_CODE_7 = "7";
+	/** 8 = 8 */
+	public static final String PROVINCE_CODE_8 = "8";
+	/** 9 = 9 */
+	public static final String PROVINCE_CODE_9 = "9";
+	/** Set Province Code.
+		@param province_code Province Code
 	*/
 	public void setprovince_code (String province_code)
 	{
+
 		set_Value (COLUMNNAME_province_code, province_code);
 	}
 
-	/** Get province_code.
-		@return province_code	  */
+	/** Get Province Code.
+		@return Province Code	  */
 	public String getprovince_code()
 	{
 		return (String)get_Value(COLUMNNAME_province_code);
 	}
 
+	/** SN000 = SN000 */
+	public static final String SCENARIO_ID_SN000 = "SN000";
+	/** SN001 = SN001 */
+	public static final String SCENARIO_ID_SN001 = "SN001";
+	/** SN002 = SN002 */
+	public static final String SCENARIO_ID_SN002 = "SN002";
+	/** SN003 = SN003 */
+	public static final String SCENARIO_ID_SN003 = "SN003";
+	/** SN004 = SN004 */
+	public static final String SCENARIO_ID_SN004 = "SN004";
+	/** SN005 = SN005 */
+	public static final String SCENARIO_ID_SN005 = "SN005";
+	/** SN006 = SN006 */
+	public static final String SCENARIO_ID_SN006 = "SN006";
+	/** SN007 = SN007 */
+	public static final String SCENARIO_ID_SN007 = "SN007";
+	/** SN008 = SN008 */
+	public static final String SCENARIO_ID_SN008 = "SN008";
+	/** SN009 = SN009 */
+	public static final String SCENARIO_ID_SN009 = "SN009";
+	/** SN010 = SN010 */
+	public static final String SCENARIO_ID_SN010 = "SN010";
+	/** SN011 = SN011 */
+	public static final String SCENARIO_ID_SN011 = "SN011";
+	/** SN012 = SN012 */
+	public static final String SCENARIO_ID_SN012 = "SN012";
+	/** SN013 = SN013 */
+	public static final String SCENARIO_ID_SN013 = "SN013";
+	/** SN014 = SN014 */
+	public static final String SCENARIO_ID_SN014 = "SN014";
+	/** SN015 = SN015 */
+	public static final String SCENARIO_ID_SN015 = "SN015";
+	/** SN016 = SN016 */
+	public static final String SCENARIO_ID_SN016 = "SN016";
+	/** SN017 = SN017 */
+	public static final String SCENARIO_ID_SN017 = "SN017";
+	/** SN018 = SN018 */
+	public static final String SCENARIO_ID_SN018 = "SN018";
+	/** SN019 = SN019 */
+	public static final String SCENARIO_ID_SN019 = "SN019";
+	/** SN020 = SN020 */
+	public static final String SCENARIO_ID_SN020 = "SN020";
+	/** SN021 = SN021 */
+	public static final String SCENARIO_ID_SN021 = "SN021";
+	/** SN022 = SN022 */
+	public static final String SCENARIO_ID_SN022 = "SN022";
+	/** SN023 = SN023 */
+	public static final String SCENARIO_ID_SN023 = "SN023";
+	/** SN024 = SN024 */
+	public static final String SCENARIO_ID_SN024 = "SN024";
 	/** Set scenario_id.
 		@param scenario_id scenario_id
 	*/
 	public void setscenario_id (String scenario_id)
 	{
+
 		set_Value (COLUMNNAME_scenario_id, scenario_id);
 	}
 
