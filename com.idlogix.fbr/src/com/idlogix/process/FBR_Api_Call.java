@@ -174,7 +174,7 @@ public class FBR_Api_Call extends SvrProcess {
                 }
                line.setfixed_notified_value_or_retail_price(BigDecimal.ZERO);
                line.setsales_tax_withheld_at_source(BigDecimal.ZERO);
-               line.setextra_tax(new BigDecimal((String)taxResult.get("additional_tax")));
+//               line.setextra_tax(new BigDecimal((String)taxResult.get("additional_tax")));
                line.setfurther_tax(new BigDecimal((String)taxResult.get("further_tax")));
                BigDecimal totalAllTax = t_totalBigDecimal.add( new BigDecimal((String)taxResult.get("further_tax"))
             		   .add(new BigDecimal((String)taxResult.get("additional_tax")))); 
@@ -202,7 +202,7 @@ public class FBR_Api_Call extends SvrProcess {
          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
          String startDateStr = sdf.format(this.p_startdate);
          String endDateStr = sdf.format(this.p_enddate);
-         String filter = String.format("Invoices/DocEntry eq 27555 and Invoices/DocEntry eq Invoices/DocumentLines/DocEntry and Invoices/DocumentLines/ItemCode eq Items/ItemCode and Invoices/CardCode eq BusinessPartners/CardCode and DocDate ge '%s' and DocDate le '%s' ", startDateStr, endDateStr);
+         String filter = String.format("Invoices/DocEntry eq Invoices/DocumentLines/DocEntry and Invoices/DocumentLines/ItemCode eq Items/ItemCode and Invoices/CardCode eq BusinessPartners/CardCode and DocDate ge '%s' and DocDate le '%s' ", startDateStr, endDateStr);
          String query = "$crossjoin(Invoices,Invoices/DocumentLines,Items,BusinessPartners)?$expand=Invoices($select=DocEntry,DocNum,DocType,DocDate,DocDueDate,CardCode,CardName,DocTotal,Address,Address2,VatPercent),Invoices/DocumentLines($select=ItemCode,ItemDescription,Quantity,Rate,LineTotal,UoMCode,DiscountPercent,U_HS,GrossTotal,LineTotal,TaxTotal,LineNum),Items($select=ItemCode,ItemName,QuantityOrderedByCustomers,U_HSCode,U_Weight,U_CartonUnits),BusinessPartners($select=Address,Block,FederalTaxID,AdditionalID,U_RegType,CardCode)&$filter=" + filter;
          String fullInvoiceUrl = baseUrl + query;
          String payload = String.format("{\n    \"loginUrl\": \"%s\",\n    \"invoiceUrl\": \"%s\",\n    \"loginPayload\": {\n        \"UserName\": \"%s\",\n        \"Password\": \"%s\",\n        \"CompanyDB\": \"%s\"\n    }\n}\n", this.cred.getsap_login_url(), fullInvoiceUrl, this.cred.getsap_username(), this.cred.getsap_password(), this.cred.getsap_company_db());
