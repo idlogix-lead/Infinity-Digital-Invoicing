@@ -21,6 +21,8 @@ import org.compiere.util.Env;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.idlogix.model.MSAPFBRCredential;
 import com.idlogix.model.MSAPInvoice;
 
@@ -121,29 +123,46 @@ public class PostInvoiceOnFBR extends SvrProcess {
                     	System.out.println("Sent to FBR: " + invoiceNumber);
                     }
                     else {
-                    	System.out.println(responseBody);
-                    	if (error == null || error.isEmpty()) {
-                            JsonNode statuses = validation.path("invoiceStatuses");
-                            StringBuilder errorBuilder = new StringBuilder();
-                            if (statuses.isArray()) {
-                                for (JsonNode statusNode : statuses) {
-                                    String itemError = statusNode.path("error").asText();
-                                    if (!itemError.isEmpty()) {
-                                        errorBuilder.append("Item ")
-                                                    .append(statusNode.path("itemSNo").asText())
-                                                    .append(": ")
-                                                    .append(itemError)
-                                                    .append("\n");
-                                    }
+                        System.out.println(responseBody);
+
+                        ObjectMapper mapper = new ObjectMapper();
+                        ObjectNode errorRoot = mapper.createObjectNode();
+
+                        errorRoot.put("invoiceStatus", responseStatus);
+
+                        // Header-level error
+                        if (error != null && !error.trim().isEmpty()) {
+                            errorRoot.put("headerError", error);
+                        } else {
+                            errorRoot.put("headerError", "");
+                        }
+
+                        // Line-level errors
+                        ArrayNode lineErrors = mapper.createArrayNode();
+                        JsonNode statuses = validation.path("invoiceStatuses");
+
+                        if (statuses.isArray()) {
+                            for (JsonNode statusNode : statuses) {
+                                String itemError = statusNode.path("error").asText();
+                                if (itemError != null && !itemError.trim().isEmpty()) {
+                                    ObjectNode lineError = mapper.createObjectNode();
+                                    lineError.put("itemSNo", statusNode.path("itemSNo").asText());
+                                    lineError.put("error", itemError);
+                                    lineErrors.add(lineError);
                                 }
                             }
-                            error = errorBuilder.toString().trim(); // overwrite error with line-level errors
                         }
-                    	invoice.setIsValid(false);
-                    	invoice.setfbr_error_msg(error);
-                    	invoice.saveEx();
-//	                    return "Status = " + responseBody ; // return only the invoice number
+
+                        // Only add lineErrors if at least one exists
+                        if (lineErrors.size() > 0) {
+                            errorRoot.set("lineErrors", lineErrors);
+                        }
+
+                        invoice.setIsValid(false);
+                        invoice.setfbr_error_msg(errorRoot.toString());
+                        invoice.saveEx();
                     }
+
                 } 
                 else {
                 	invoice.setIsValid(false);
