@@ -95,13 +95,17 @@ public class PostInvoiceOnFBR extends SvrProcess {
 			
         String apiUrl = cred.getfbr_api_url();
         String bearerToken = cred.getfbr_bearer_token();
+        String payload = invoice.getFBRJsonPayload(cred);
+        invoice.set_ValueOfColumn("FBR_Payload", payload);
+        invoice.save();
         
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPost post = new HttpPost(apiUrl);
             post.setHeader("Content-Type", "application/json");
             post.setHeader("Accept", "application/json");
-            post.setHeader("Authorization", "Bearer " + bearerToken);           
-            post.setEntity(new StringEntity(invoice.getFBRJsonPayload(cred), StandardCharsets.UTF_8));                     
+            post.setHeader("Authorization", "Bearer " + bearerToken);                         
+            post.setEntity(new StringEntity(invoice.getFBRJsonPayload(cred), StandardCharsets.UTF_8)); 
+             
 //            System.out.println(invoice.getFBRJsonPayload());           
             try (CloseableHttpResponse response = httpClient.execute(post)) {
                 int statusCode = response.getStatusLine().getStatusCode();
