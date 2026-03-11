@@ -80,7 +80,7 @@ public class FBR_Api_Call extends SvrProcess {
                JsonNode itemNode = row.path("Items");
                JsonNode BPartnersNode = row.path("BusinessPartners");
                int docEntry = invoiceNode.path("DocEntry").asInt();
-               int docNum = invoiceNode.path("DocNum").asInt();
+               int docNum = invoiceNode.path("DocNum").asInt();              
                MSAPInvoice invoice;
                String buyerNtnCnic;
                String U_RegType;
@@ -202,8 +202,8 @@ public class FBR_Api_Call extends SvrProcess {
          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
          String startDateStr = sdf.format(this.p_startdate);
          String endDateStr = sdf.format(this.p_enddate);
-         String filter = String.format("Invoices/DocEntry eq Invoices/DocumentLines/DocEntry and Invoices/DocumentLines/ItemCode eq Items/ItemCode and Invoices/CardCode eq BusinessPartners/CardCode and DocDate ge '%s' and Invoices/Cancelled eq 'tNO' and DocDate le '%s' ", startDateStr, endDateStr);
-         String query = "$crossjoin(Invoices,Invoices/DocumentLines,Items,BusinessPartners)?$expand=Invoices($select=DocEntry,DocNum,DocType,DocDate,DocDueDate,CardCode,CardName,DocTotal,Address,Address2,VatPercent),Invoices/DocumentLines($select=ItemCode,ItemDescription,Quantity,Rate,LineTotal,UoMCode,DiscountPercent,U_HS,GrossTotal,LineTotal,TaxTotal,LineNum),Items($select=ItemCode,ItemName,QuantityOrderedByCustomers,U_HSCode,U_Weight,U_CartonUnits),BusinessPartners($select=Address,Block,FederalTaxID,AdditionalID,U_RegType,CardCode)&$filter=" + filter;
+         String filter = String.format("Invoices/DocEntry eq Invoices/DocumentLines/DocEntry and Invoices/DocumentLines/ItemCode eq Items/ItemCode and Invoices/CardCode eq BusinessPartners/CardCode and BusinessPartners/GroupCode eq 104 and DocDate ge '%s' and Invoices/Cancelled eq 'tNO' and DocDate le '%s' ", startDateStr, endDateStr);
+         String query = "$crossjoin(Invoices,Invoices/DocumentLines,Items,BusinessPartners)?$expand=Invoices($select=DocEntry,DocNum,DocType,DocDate,DocDueDate,CardCode,CardName,DocTotal,Address,Address2,VatPercent),Invoices/DocumentLines($select=ItemCode,ItemDescription,Quantity,Rate,LineTotal,UoMCode,DiscountPercent,U_HS,GrossTotal,LineTotal,TaxTotal,LineNum),Items($select=ItemCode,ItemName,QuantityOrderedByCustomers,U_HSCode,U_Weight,U_CartonUnits),BusinessPartners($select=Address,Block,FederalTaxID,AdditionalID,U_RegType,CardCode,GroupCode)&$filter=" + filter;
          String fullInvoiceUrl = baseUrl + query;
          String payload = String.format("{\n    \"loginUrl\": \"%s\",\n    \"invoiceUrl\": \"%s\",\n    \"loginPayload\": {\n        \"UserName\": \"%s\",\n        \"Password\": \"%s\",\n        \"CompanyDB\": \"%s\"\n    }\n}\n", this.cred.getsap_login_url(), fullInvoiceUrl, this.cred.getsap_username(), this.cred.getsap_password(), this.cred.getsap_company_db());
          System.out.println(fullInvoiceUrl);

@@ -95,6 +95,8 @@ public class PostInvoiceOnFBR extends SvrProcess {
 			
         String apiUrl = cred.getfbr_api_url();
         String bearerToken = cred.getfbr_bearer_token();
+        String payload = invoice.getFBRJsonPayload(cred);
+        invoice.set_ValueOfColumn("FBR_Payload", payload);
         
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPost post = new HttpPost(apiUrl);
