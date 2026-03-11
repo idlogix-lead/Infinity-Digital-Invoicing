@@ -80,13 +80,7 @@ public class FBR_Api_Call extends SvrProcess {
                JsonNode itemNode = row.path("Items");
                JsonNode BPartnersNode = row.path("BusinessPartners");
                int docEntry = invoiceNode.path("DocEntry").asInt();
-               int docNum = invoiceNode.path("DocNum").asInt();
-               int groupCode = BPartnersNode.path("GroupCode").asInt();
-
-               if (groupCode != 104) {
-                   System.out.println("Skipping Export Invoice. GroupCode: " + groupCode);
-                   continue;
-               }
+               int docNum = invoiceNode.path("DocNum").asInt();              
                MSAPInvoice invoice;
                String buyerNtnCnic;
                String U_RegType;
